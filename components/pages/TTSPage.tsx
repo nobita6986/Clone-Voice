@@ -16,13 +16,27 @@ interface TTSPageProps {
 const placeholderTexts: Record<string, string> = {
   'en-US': 'Hello! Welcome to VoiceClone Studio, powered by Gemini.',
   'en-GB': 'Hello! Welcome to VoiceClone Studio, powered by Gemini.',
+  'en-AU': 'G\'day! Welcome to VoiceClone Studio, powered by Gemini.',
+  'en-IN': 'Hello! Welcome to VoiceClone Studio, powered by Gemini.',
   'de-DE': 'Hallo! Willkommen im VoiceClone Studio, angetrieben von Gemini.',
   'es-ES': '¡Hola! Bienvenido a VoiceClone Studio, con la tecnología de Gemini.',
+  'es-US': '¡Hola! Bienvenido a VoiceClone Studio, con la tecnología de Gemini.',
   'fr-FR': 'Bonjour! Bienvenue sur VoiceClone Studio, propulsé par Gemini.',
   'hi-IN': 'नमस्ते! जेमिनी द्वारा संचालित वॉयसक्लोन स्टूडियो में आपका स्वागत है।',
   'ja-JP': 'こんにちは！Geminiを搭載したVoiceClone Studioへようこそ。',
   'ko-KR': '안녕하세요! Gemini가 제공하는 VoiceClone Studio에 오신 것을 환영합니다.',
   'vi-VN': 'Xin chào! Chào mừng bạn đến với VoiceClone Studio, được cung cấp bởi Gemini.',
+  'it-IT': 'Ciao! Benvenuto in VoiceClone Studio, potenziato da Gemini.',
+  'pt-BR': 'Olá! Bem-vindo ao VoiceClone Studio, desenvolvido com Gemini.',
+  'ru-RU': 'Привет! Добро пожаловать в VoiceClone Studio на базе Gemini.',
+  'cmn-CN': '你好！欢迎使用由 Gemini 驱动的 VoiceClone Studio。',
+  'cmn-TW': '你好！歡迎使用由 Gemini 驅動的 VoiceClone Studio。',
+  'nl-NL': 'Hallo! Welkom bij VoiceClone Studio, mogelijk gemaakt door Gemini.',
+  'id-ID': 'Halo! Selamat datang di VoiceClone Studio, didukung oleh Gemini.',
+  'ar-XA': 'مرحبًا! أهلاً بك في استوديو VoiceClone، المدعوم بواسطة Gemini.',
+  'fil-PH': 'Kamusta! Maligayang pagdating sa VoiceClone Studio, na pinapagana ng Gemini.',
+  'tr-TR': 'Merhaba! Gemini tarafından desteklenen VoiceClone Studio\'ya hoş geldiniz.',
+  'th-TH': 'สวัสดี! ยินดีต้อนรับสู่ VoiceClone Studio ที่ขับเคลื่อนโดย Gemini',
 };
 
 

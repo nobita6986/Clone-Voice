@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import type { Voice } from '../../types';
 import { UploadIcon, FileIcon, TrashIcon, SpinnerIcon } from '../icons/Icons';
 import { PREBUILT_VOICES } from '../../constants';
@@ -7,12 +7,47 @@ interface NewVoicePageProps {
   onVoiceCreated: (voice: Voice) => void;
 }
 
+const languageNames: Record<string, string> = {
+    'en-US': 'English (US)',
+    'en-GB': 'English (UK)',
+    'en-AU': 'English (Australia)',
+    'en-IN': 'English (India)',
+    'vi-VN': 'Vietnamese',
+    'fr-FR': 'French',
+    'es-ES': 'Spanish (Spain)',
+    'es-US': 'Spanish (US)',
+    'de-DE': 'German',
+    'ja-JP': 'Japanese',
+    'hi-IN': 'Hindi',
+    'ko-KR': 'Korean',
+    'it-IT': 'Italian',
+    'pt-BR': 'Portuguese (Brazil)',
+    'ru-RU': 'Russian',
+    'cmn-CN': 'Mandarin (China)',
+    'cmn-TW': 'Mandarin (Taiwan)',
+    'nl-NL': 'Dutch',
+    'id-ID': 'Indonesian',
+    'ar-XA': 'Arabic',
+    'fil-PH': 'Filipino',
+    'tr-TR': 'Turkish',
+    'th-TH': 'Thai'
+};
+
 export const NewVoicePage: React.FC<NewVoicePageProps> = ({ onVoiceCreated }) => {
   const [displayName, setDisplayName] = useState('');
   const [language, setLanguage] = useState('en-US');
   const [files, setFiles] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const availableLanguages = useMemo(() => {
+    return Array.from(
+        new Set(PREBUILT_VOICES.map(v => v.languageCode))
+    ).map(code => ({
+        code,
+        name: languageNames[code] || code
+    })).sort((a, b) => a.name.localeCompare(b.name));
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -92,15 +127,9 @@ export const NewVoicePage: React.FC<NewVoicePageProps> = ({ onVoiceCreated }) =>
             onChange={(e) => setLanguage(e.target.value)}
             className="w-full bg-gray-700 border-gray-600 text-white rounded-lg p-3 focus:ring-brand-blue focus:border-brand-blue"
           >
-            <option value="en-US">English (US)</option>
-            <option value="en-GB">English (UK)</option>
-            <option value="de-DE">German</option>
-            <option value="es-ES">Spanish</option>
-            <option value="fr-FR">French</option>
-            <option value="hi-IN">Hindi</option>
-            <option value="ja-JP">Japanese</option>
-            <option value="ko-KR">Korean</option>
-            <option value="vi-VN">Vietnamese</option>
+            {availableLanguages.map(({ code, name }) => (
+                <option key={code} value={code}>{name}</option>
+            ))}
           </select>
         </div>
 
