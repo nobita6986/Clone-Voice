@@ -42,7 +42,7 @@ const placeholderTexts: Record<string, string> = {
 
 export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete, activeApiKey, selectedModel, openApiKeyManager }) => {
   const [text, setText] = useState('');
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('en-US');
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('');
   const [selectedVoiceId, setSelectedVoiceId] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -71,8 +71,18 @@ export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete, 
     return groupedPrebuiltVoices[selectedLanguage] || [];
   }, [selectedLanguage, groupedPrebuiltVoices]);
 
-  // Set initial default language and voice
+  // Set initial default language and voice to US English
   useEffect(() => {
+    const defaultLang = 'en-US';
+    if (availableLanguages.includes(defaultLang)) {
+      const firstVoiceInLang = groupedPrebuiltVoices[defaultLang]?.[0];
+      if (firstVoiceInLang) {
+          setSelectedLanguage(defaultLang);
+          setSelectedVoiceId(firstVoiceInLang.id);
+          return;
+      }
+    }
+    // Fallback to the first available language if US English is not found
     const firstLang = availableLanguages[0];
     if (firstLang) {
       const firstVoiceInLang = groupedPrebuiltVoices[firstLang]?.[0];
@@ -81,11 +91,13 @@ export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete, 
           setSelectedVoiceId(firstVoiceInLang.id);
       }
     }
-  }, []); // Run only once on mount
+  }, [availableLanguages, groupedPrebuiltVoices]);
 
   // Update text placeholder when language changes
   useEffect(() => {
-    setText(placeholderTexts[selectedLanguage] || 'Enter text to generate speech.');
+    if(selectedLanguage) {
+      setText(placeholderTexts[selectedLanguage] || 'Enter text to generate speech.');
+    }
   }, [selectedLanguage]);
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -96,7 +108,13 @@ export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete, 
     if (firstVoiceInNewLang) {
       setSelectedVoiceId(firstVoiceInNewLang.id);
     } else {
-      setSelectedVoiceId(''); // Or handle case with no voices
+      // Check custom voices if no prebuilt voices exist for this language
+      const firstCustomVoice = customVoices.find(v => v.languageCode === newLang);
+      if (firstCustomVoice) {
+        setSelectedVoiceId(firstCustomVoice.id);
+      } else {
+        setSelectedVoiceId('');
+      }
     }
   };
 
@@ -169,7 +187,7 @@ export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete, 
               id="voice-select"
               value={selectedVoiceId}
               onChange={(e) => setSelectedVoiceId(e.target.value)}
-              disabled={voicesForSelectedLanguage.length === 0}
+              disabled={voicesForSelectedLanguage.length === 0 && customVoices.filter(v => v.languageCode === selectedLanguage).length === 0}
               className="w-full bg-gray-700 border-gray-600 text-white rounded-lg p-3 focus:ring-brand-blue focus:border-brand-blue disabled:bg-gray-600 disabled:cursor-not-allowed"
             >
               <optgroup label="Pre-built Voices">
@@ -178,10 +196,10 @@ export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete, 
                   ))}
               </optgroup>
               {customVoices.filter(v => v.languageCode === selectedLanguage).length > 0 && (
-                <optgroup label="Custom Voices (Demo)">
+                <optgroup label="Custom Voices">
                   {customVoices.filter(v => v.languageCode === selectedLanguage).map(voice => (
-                    <option key={voice.id} value={voice.id} disabled className="text-gray-500">
-                      {voice.name} (Not available)
+                    <option key={voice.id} value={voice.id}>
+                      {voice.name}
                     </option>
                   ))}
                 </optgroup>
