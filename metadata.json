@@ -1,0 +1,7 @@
+{
+  "name": "VoiceClone Studio",
+  "description": "An application to generate speech from text using pre-built and custom-cloned voices via the Gemini API. Users can input text, select a voice, and generate, play, and download the resulting audio.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
