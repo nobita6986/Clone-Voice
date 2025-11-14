@@ -1,134 +1,39 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+
+import React, { useState, useEffect, useCallback } from 'react';
 import type { Voice, HistoryItem } from '../../types';
 import { generateSpeech } from '../../services/geminiService';
 import AudioPlayer from '../AudioPlayer';
 import { SpinnerIcon } from '../icons/Icons';
-import { PREBUILT_VOICES, LANGUAGE_NAMES } from '../../constants';
 
 interface TTSPageProps {
   voices: Voice[];
   onGenerationComplete: (item: Omit<HistoryItem, 'id' | 'createdAt'>) => void;
-  activeApiKey: string | null;
-  selectedModel: string;
-  openApiKeyManager: () => void;
 }
 
-const placeholderTexts: Record<string, string> = {
-  'en-US': 'Hello! Welcome to VoiceClone Studio, powered by Gemini.',
-  'en-GB': 'Hello! Welcome to VoiceClone Studio, powered by Gemini.',
-  'en-AU': 'G\'day! Welcome to VoiceClone Studio, powered by Gemini.',
-  'en-IN': 'Hello! Welcome to VoiceClone Studio, powered by Gemini.',
-  'de-DE': 'Hallo! Willkommen im VoiceClone Studio, angetrieben von Gemini.',
-  'es-ES': '¡Hola! Bienvenido a VoiceClone Studio, con la tecnología de Gemini.',
-  'es-US': '¡Hola! Bienvenido a VoiceClone Studio, con la tecnología de Gemini.',
-  'fr-FR': 'Bonjour! Bienvenue sur VoiceClone Studio, propulsé par Gemini.',
-  'hi-IN': 'नमस्ते! जेमिनी द्वारा संचालित वॉयसक्लोन स्टूडियो में आपका स्वागत है।',
-  'ja-JP': 'こんにちは！Geminiを搭載したVoiceClone Studioへようこそ。',
-  'ko-KR': '안녕하세요! Gemini가 제공하는 VoiceClone Studio에 오신 것을 환영합니다.',
-  'vi-VN': 'Xin chào! Chào mừng bạn đến với VoiceClone Studio, được cung cấp bởi Gemini.',
-  'it-IT': 'Ciao! Benvenuto in VoiceClone Studio, potenziato da Gemini.',
-  'pt-BR': 'Olá! Bem-vindo ao VoiceClone Studio, desenvolvido com Gemini.',
-  'ru-RU': 'Привет! Добро пожаловать в VoiceClone Studio на базе Gemini.',
-  'cmn-CN': '你好！欢迎使用由 Gemini 驱动的 VoiceClone Studio。',
-  'cmn-TW': '你好！歡迎使用由 Gemini 驅動的 VoiceClone Studio。',
-  'nl-NL': 'Hallo! Welkom bij VoiceClone Studio, mogelijk gemaakt door Gemini.',
-  'id-ID': 'Halo! Selamat datang di VoiceClone Studio, didukung oleh Gemini.',
-  'ar-XA': 'مرحبًا! أهلاً بك في استوديو VoiceClone، المدعوم بواسطة Gemini.',
-  'fil-PH': 'Kamusta! Maligayang pagdating sa VoiceClone Studio, na pinapagana ng Gemini.',
-  'tr-TR': 'Merhaba! Gemini tarafından desteklenen VoiceClone Studio\'ya hoş geldiniz.',
-  'th-TH': 'สวัสดี! ยินดีต้อนรับสู่ VoiceClone Studio ที่ขับเคลื่อนโดย Gemini',
-};
-
-
-export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete, activeApiKey, selectedModel, openApiKeyManager }) => {
-  const [text, setText] = useState('');
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('');
-  const [selectedVoiceId, setSelectedVoiceId] = useState<string>('');
+export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete }) => {
+  const [text, setText] = useState('Hello! Welcome to VoiceClone Studio, powered by Gemini.');
+  const [selectedVoiceId, setSelectedVoiceId] = useState<string>(voices[0]?.id || '');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [generatedAudio, setGeneratedAudio] = useState<string>('');
   
-  const { prebuiltVoices, customVoices } = useMemo(() => {
-    const prebuilt = voices.filter(v => v.type === 'prebuilt');
-    const custom = voices.filter(v => v.type === 'custom');
-    return { prebuiltVoices: prebuilt, customVoices: custom };
-  }, [voices]);
-  
-  const groupedPrebuiltVoices = useMemo(() => {
-    return prebuiltVoices.reduce((acc, voice) => {
-      (acc[voice.languageCode] = acc[voice.languageCode] || []).push(voice);
-      return acc;
-    }, {} as Record<string, Voice[]>);
-  }, [prebuiltVoices]);
-
-  const availableLanguages = useMemo(() => {
-    return Object.keys(groupedPrebuiltVoices).sort((a, b) => 
-      LANGUAGE_NAMES[a].localeCompare(LANGUAGE_NAMES[b])
-    );
-  }, [groupedPrebuiltVoices]);
-
-  const voicesForSelectedLanguage = useMemo(() => {
-    return groupedPrebuiltVoices[selectedLanguage] || [];
-  }, [selectedLanguage, groupedPrebuiltVoices]);
-
-  // Set initial default language and voice to US English
-  useEffect(() => {
-    const defaultLang = 'en-US';
-    if (availableLanguages.includes(defaultLang)) {
-      const firstVoiceInLang = groupedPrebuiltVoices[defaultLang]?.[0];
-      if (firstVoiceInLang) {
-          setSelectedLanguage(defaultLang);
-          setSelectedVoiceId(firstVoiceInLang.id);
-          return;
-      }
-    }
-    // Fallback to the first available language if US English is not found
-    const firstLang = availableLanguages[0];
-    if (firstLang) {
-      const firstVoiceInLang = groupedPrebuiltVoices[firstLang]?.[0];
-      if (firstVoiceInLang) {
-          setSelectedLanguage(firstLang);
-          setSelectedVoiceId(firstVoiceInLang.id);
-      }
-    }
-  }, [availableLanguages, groupedPrebuiltVoices]);
-
-  // Update text placeholder when language changes
-  useEffect(() => {
-    if(selectedLanguage) {
-      setText(placeholderTexts[selectedLanguage] || 'Enter text to generate speech.');
-    }
-  }, [selectedLanguage]);
-
-  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newLang = e.target.value;
-    setSelectedLanguage(newLang);
-    // Set the voice to the first one in the new language list
-    const firstVoiceInNewLang = groupedPrebuiltVoices[newLang]?.[0];
-    if (firstVoiceInNewLang) {
-      setSelectedVoiceId(firstVoiceInNewLang.id);
-    } else {
-      // Check custom voices if no prebuilt voices exist for this language
-      const firstCustomVoice = customVoices.find(v => v.languageCode === newLang);
-      if (firstCustomVoice) {
-        setSelectedVoiceId(firstCustomVoice.id);
-      } else {
-        setSelectedVoiceId('');
-      }
-    }
-  };
-
   const selectedVoice = voices.find(v => v.id === selectedVoiceId);
 
+  useEffect(() => {
+    if (!selectedVoiceId && voices.length > 0) {
+      setSelectedVoiceId(voices[0].id);
+    }
+  }, [voices, selectedVoiceId]);
+
   const handleGenerate = useCallback(async () => {
-    if (!text || !selectedVoice || !activeApiKey) return;
+    if (!text || !selectedVoice) return;
 
     setIsLoading(true);
     setError(null);
     setGeneratedAudio('');
 
     try {
-      const audioData = await generateSpeech(text, selectedVoice.providerVoiceId, activeApiKey, selectedModel);
+      const audioData = await generateSpeech(text, selectedVoice.providerVoiceId);
       setGeneratedAudio(audioData);
       onGenerationComplete({
         text,
@@ -140,7 +45,7 @@ export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete, 
     } finally {
       setIsLoading(false);
     }
-  }, [text, selectedVoice, onGenerationComplete, activeApiKey, selectedModel]);
+  }, [text, selectedVoice, onGenerationComplete]);
   
   return (
     <div className="max-w-3xl mx-auto">
@@ -149,65 +54,29 @@ export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete, 
         <p className="text-gray-400 mt-1">Transform your text into lifelike speech with a single click.</p>
       </header>
 
-      {!activeApiKey && (
-        <div className="mb-6 p-4 bg-yellow-900/50 border border-yellow-500 text-yellow-300 rounded-lg">
-          <p className="font-bold">API Key Required</p>
-          <p>
-            Please {' '}
-            <button onClick={openApiKeyManager} className="underline hover:text-yellow-200">
-              add and activate an API key
-            </button>
-            {' '} to generate audio.
-          </p>
-        </div>
-      )}
-
       <div className="space-y-6 bg-gray-800 p-6 rounded-xl shadow-lg">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="language-select" className="block text-sm font-medium text-gray-300 mb-2">
-              Language
-            </label>
-            <select
-              id="language-select"
-              value={selectedLanguage}
-              onChange={handleLanguageChange}
-              className="w-full bg-gray-700 border-gray-600 text-white rounded-lg p-3 focus:ring-brand-blue focus:border-brand-blue"
-            >
-              {availableLanguages.map(langCode => (
-                <option key={langCode} value={langCode}>{LANGUAGE_NAMES[langCode] || langCode}</option>
+        <div>
+          <label htmlFor="voice-select" className="block text-sm font-medium text-gray-300 mb-2">
+            Select a Voice
+          </label>
+          <select
+            id="voice-select"
+            value={selectedVoiceId}
+            onChange={(e) => setSelectedVoiceId(e.target.value)}
+            className="w-full bg-gray-700 border-gray-600 text-white rounded-lg p-3 focus:ring-brand-blue focus:border-brand-blue"
+          >
+            <optgroup label="Custom Voices">
+              {voices.filter(v => v.type === 'custom').map(voice => (
+                <option key={voice.id} value={voice.id}>{voice.name}</option>
               ))}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="voice-select" className="block text-sm font-medium text-gray-300 mb-2">
-              Voice
-            </label>
-            <select
-              id="voice-select"
-              value={selectedVoiceId}
-              onChange={(e) => setSelectedVoiceId(e.target.value)}
-              disabled={voicesForSelectedLanguage.length === 0 && customVoices.filter(v => v.languageCode === selectedLanguage).length === 0}
-              className="w-full bg-gray-700 border-gray-600 text-white rounded-lg p-3 focus:ring-brand-blue focus:border-brand-blue disabled:bg-gray-600 disabled:cursor-not-allowed"
-            >
-              <optgroup label="Pre-built Voices">
-                  {voicesForSelectedLanguage.map(voice => (
-                    <option key={voice.id} value={voice.id}>{`${voice.name} (${voice.displayName})`}</option>
-                  ))}
-              </optgroup>
-              {customVoices.filter(v => v.languageCode === selectedLanguage).length > 0 && (
-                <optgroup label="Custom Voices">
-                  {customVoices.filter(v => v.languageCode === selectedLanguage).map(voice => (
-                    <option key={voice.id} value={voice.id}>
-                      {voice.name}
-                    </option>
-                  ))}
-                </optgroup>
-              )}
-            </select>
-          </div>
+            </optgroup>
+            <optgroup label="Pre-built Voices">
+              {voices.filter(v => v.type === 'prebuilt').map(voice => (
+                <option key={voice.id} value={voice.id}>{voice.name}</option>
+              ))}
+            </optgroup>
+          </select>
         </div>
-
 
         <div>
           <label htmlFor="tts-text" className="block text-sm font-medium text-gray-300 mb-2">
@@ -226,7 +95,7 @@ export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete, 
 
         <button
           onClick={handleGenerate}
-          disabled={isLoading || !text || !activeApiKey || !selectedVoiceId}
+          disabled={isLoading || !text}
           className="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-brand-blue to-brand-teal text-white font-bold py-3 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
         >
           {isLoading ? (

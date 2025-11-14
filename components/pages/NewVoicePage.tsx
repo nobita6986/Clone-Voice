@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from 'react';
+
+import React, { useState } from 'react';
 import type { Voice } from '../../types';
 import { UploadIcon, FileIcon, TrashIcon, SpinnerIcon } from '../icons/Icons';
-import { PREBUILT_VOICES, LANGUAGE_NAMES } from '../../constants';
 
 interface NewVoicePageProps {
   onVoiceCreated: (voice: Voice) => void;
@@ -13,12 +13,6 @@ export const NewVoicePage: React.FC<NewVoicePageProps> = ({ onVoiceCreated }) =>
   const [files, setFiles] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const availableLanguages = useMemo(() => {
-    return Object.entries(LANGUAGE_NAMES)
-      .map(([code, name]) => ({ code, name }))
-      .sort((a, b) => a.name.localeCompare(b.name));
-  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -47,18 +41,12 @@ export const NewVoicePage: React.FC<NewVoicePageProps> = ({ onVoiceCreated }) =>
     // 4. The backend would return the new voice profile details.
     
     setTimeout(() => {
-      // FIX: Instead of a fake ID, map the custom voice to a real, pre-built voice
-      // of the selected language to prevent API errors.
-      const baseVoice = PREBUILT_VOICES.find(v => v.languageCode === language) || PREBUILT_VOICES[0];
-
       const newVoice: Voice = {
         id: `custom-${Date.now()}`,
-        name: `${displayName}`,
-        displayName: 'Custom',
-        gender: 'Female', // Defaulting to female for demo
+        name: `${displayName} (Custom)`,
         type: 'custom',
         languageCode: language,
-        providerVoiceId: baseVoice.providerVoiceId,
+        providerVoiceId: `custom-voice-${Math.random().toString(36).substring(7)}`, // Mocked provider ID
       };
       onVoiceCreated(newVoice);
       setDisplayName('');
@@ -100,9 +88,10 @@ export const NewVoicePage: React.FC<NewVoicePageProps> = ({ onVoiceCreated }) =>
             onChange={(e) => setLanguage(e.target.value)}
             className="w-full bg-gray-700 border-gray-600 text-white rounded-lg p-3 focus:ring-brand-blue focus:border-brand-blue"
           >
-            {availableLanguages.map(({ code, name }) => (
-                <option key={code} value={code}>{name}</option>
-            ))}
+            <option value="en-US">English (US)</option>
+            <option value="en-GB">English (UK)</option>
+            <option value="fr-FR">French</option>
+            <option value="es-ES">Spanish</option>
           </select>
         </div>
 
