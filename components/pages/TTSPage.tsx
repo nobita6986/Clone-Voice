@@ -36,10 +36,13 @@ export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete, 
   const selectedVoice = voices.find(v => v.id === selectedVoiceId);
 
   useEffect(() => {
-    if (!selectedVoiceId && voices.length > 0) {
-      setSelectedVoiceId(voices[0].id);
+    // Set default selection to the first available prebuilt voice
+    const firstPrebuilt = voices.find(v => v.type === 'prebuilt');
+    if (!selectedVoiceId && firstPrebuilt) {
+      setSelectedVoiceId(firstPrebuilt.id);
     }
   }, [voices, selectedVoiceId]);
+
 
   useEffect(() => {
     if (selectedVoice) {
@@ -100,14 +103,16 @@ export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete, 
             onChange={(e) => setSelectedVoiceId(e.target.value)}
             className="w-full bg-gray-700 border-gray-600 text-white rounded-lg p-3 focus:ring-brand-blue focus:border-brand-blue"
           >
-            <optgroup label="Custom Voices">
-              {voices.filter(v => v.type === 'custom').map(voice => (
-                <option key={voice.id} value={voice.id}>{voice.name}</option>
-              ))}
-            </optgroup>
             <optgroup label="Pre-built Voices">
               {voices.filter(v => v.type === 'prebuilt').map(voice => (
                 <option key={voice.id} value={voice.id}>{voice.name}</option>
+              ))}
+            </optgroup>
+            <optgroup label="Custom Voices (Demo)">
+              {voices.filter(v => v.type === 'custom').map(voice => (
+                <option key={voice.id} value={voice.id} disabled className="text-gray-500">
+                  {voice.name} (Not available)
+                </option>
               ))}
             </optgroup>
           </select>
