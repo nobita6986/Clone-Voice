@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { Voice } from '../../types';
 import { UploadIcon, FileIcon, TrashIcon, SpinnerIcon } from '../icons/Icons';
+import { PREBUILT_VOICES } from '../../constants';
 
 interface NewVoicePageProps {
   onVoiceCreated: (voice: Voice) => void;
@@ -40,12 +41,16 @@ export const NewVoicePage: React.FC<NewVoicePageProps> = ({ onVoiceCreated }) =>
     // 4. The backend would return the new voice profile details.
     
     setTimeout(() => {
+      // FIX: Instead of a fake ID, map the custom voice to a real, pre-built voice
+      // of the selected language to prevent API errors.
+      const baseVoice = PREBUILT_VOICES.find(v => v.languageCode === language) || PREBUILT_VOICES[0];
+
       const newVoice: Voice = {
         id: `custom-${Date.now()}`,
         name: `${displayName} (Custom)`,
         type: 'custom',
         languageCode: language,
-        providerVoiceId: `custom-voice-${Math.random().toString(36).substring(7)}`, // Mocked provider ID
+        providerVoiceId: baseVoice.providerVoiceId,
       };
       onVoiceCreated(newVoice);
       setDisplayName('');
