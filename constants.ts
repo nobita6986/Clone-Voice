@@ -2,96 +2,122 @@ import type { Voice } from './types';
 
 export const PREBUILT_VOICES: Voice[] = [
   // English (US)
-  { id: 'en-US-Zephyr', name: 'Zephyr (US English - Female 1)', type: 'prebuilt', languageCode: 'en-US', providerVoiceId: 'Zephyr' },
-  { id: 'en-US-Puck', name: 'Puck (US English - Male 1)', type: 'prebuilt', languageCode: 'en-US', providerVoiceId: 'Puck' },
-  { id: 'en-US-Algenib', name: 'Algenib (US English - Male 2)', type: 'prebuilt', languageCode: 'en-US', providerVoiceId: 'Algenib' },
-  { id: 'en-US-Rasalgethi', name: 'Rasalgethi (US English - Male 3)', type: 'prebuilt', languageCode: 'en-US', providerVoiceId: 'Rasalgethi' },
-  { id: 'en-US-Umbriel', name: 'Umbriel (US English - Female 2)', type: 'prebuilt', languageCode: 'en-US', providerVoiceId: 'Umbriel' },
-  { id: 'en-US-Vindemiatrix', name: 'Vindemiatrix (US English - Female 3)', type: 'prebuilt', languageCode: 'en-US', providerVoiceId: 'Vindemiatrix' },
+  { id: 'en-US-Zephyr', name: 'Zephyr', displayName: 'Female 1', gender: 'Female', type: 'prebuilt', languageCode: 'en-US', providerVoiceId: 'Zephyr' },
+  { id: 'en-US-Puck', name: 'Puck', displayName: 'Male 1', gender: 'Male', type: 'prebuilt', languageCode: 'en-US', providerVoiceId: 'Puck' },
+  { id: 'en-US-Algenib', name: 'Algenib', displayName: 'Male 2', gender: 'Male', type: 'prebuilt', languageCode: 'en-US', providerVoiceId: 'Algenib' },
+  { id: 'en-US-Rasalgethi', name: 'Rasalgethi', displayName: 'Male 3', gender: 'Male', type: 'prebuilt', languageCode: 'en-US', providerVoiceId: 'Rasalgethi' },
+  { id: 'en-US-Umbriel', name: 'Umbriel', displayName: 'Female 2', gender: 'Female', type: 'prebuilt', languageCode: 'en-US', providerVoiceId: 'Umbriel' },
+  { id: 'en-US-Vindemiatrix', name: 'Vindemiatrix', displayName: 'Female 3', gender: 'Female', type: 'prebuilt', languageCode: 'en-US', providerVoiceId: 'Vindemiatrix' },
 
   // English (UK)
-  { id: 'en-GB-Charon', name: 'Charon (UK English - Female)', type: 'prebuilt', languageCode: 'en-GB', providerVoiceId: 'Charon' },
-  { id: 'en-GB-Schedar', name: 'Schedar (UK English - Male)', type: 'prebuilt', languageCode: 'en-GB', providerVoiceId: 'Schedar' },
+  { id: 'en-GB-Charon', name: 'Charon', displayName: 'Female', gender: 'Female', type: 'prebuilt', languageCode: 'en-GB', providerVoiceId: 'Charon' },
+  { id: 'en-GB-Schedar', name: 'Schedar', displayName: 'Male', gender: 'Male', type: 'prebuilt', languageCode: 'en-GB', providerVoiceId: 'Schedar' },
 
   // English (Australia)
-  { id: 'en-AU-Achernar', name: 'Achernar (Australian English - Male)', type: 'prebuilt', languageCode: 'en-AU', providerVoiceId: 'Achernar' },
-  { id: 'en-AU-Achird', name: 'Achird (Australian English - Female)', type: 'prebuilt', languageCode: 'en-AU', providerVoiceId: 'Achird' },
+  { id: 'en-AU-Achernar', name: 'Achernar', displayName: 'Male', gender: 'Male', type: 'prebuilt', languageCode: 'en-AU', providerVoiceId: 'Achernar' },
+  { id: 'en-AU-Achird', name: 'Achird', displayName: 'Female', gender: 'Female', type: 'prebuilt', languageCode: 'en-AU', providerVoiceId: 'Achird' },
 
   // English (India)
-  { id: 'en-IN-Sadachbia-EN', name: 'Sadachbia (Indian English - Male)', type: 'prebuilt', languageCode: 'en-IN', providerVoiceId: 'Sadachbia' },
-  { id: 'en-IN-Zephyr-EN', name: 'Zephyr (Indian English - Female)', type: 'prebuilt', languageCode: 'en-IN', providerVoiceId: 'Zephyr' },
+  { id: 'en-IN-Sadachbia-EN', name: 'Sadachbia', displayName: 'Male', gender: 'Male', type: 'prebuilt', languageCode: 'en-IN', providerVoiceId: 'Sadachbia' },
+  { id: 'en-IN-Zephyr-EN', name: 'Zephyr', displayName: 'Female', gender: 'Female', type: 'prebuilt', languageCode: 'en-IN', providerVoiceId: 'Zephyr' },
 
   // Vietnamese
-  { id: 'vi-VN-Kore', name: 'Kore (Vietnamese - Female 1)', type: 'prebuilt', languageCode: 'vi-VN', providerVoiceId: 'Kore' },
-  { id: 'vi-VN-Aoede', name: 'Aoede (Vietnamese - Female 2)', type: 'prebuilt', languageCode: 'vi-VN', providerVoiceId: 'Aoede' },
-  { id: 'vi-VN-Zubenelgenubi', name: 'Zubenelgenubi (Vietnamese - Male 1)', type: 'prebuilt', languageCode: 'vi-VN', providerVoiceId: 'Zubenelgenubi' },
+  { id: 'vi-VN-Kore', name: 'Kore', displayName: 'Female 1', gender: 'Female', type: 'prebuilt', languageCode: 'vi-VN', providerVoiceId: 'Kore' },
+  { id: 'vi-VN-Aoede', name: 'Aoede', displayName: 'Female 2', gender: 'Female', type: 'prebuilt', languageCode: 'vi-VN', providerVoiceId: 'Aoede' },
+  { id: 'vi-VN-Zubenelgenubi', name: 'Zubenelgenubi', displayName: 'Male 1', gender: 'Male', type: 'prebuilt', languageCode: 'vi-VN', providerVoiceId: 'Zubenelgenubi' },
 
   // French
-  { id: 'fr-FR-Kore', name: 'Kore (French - Female 1)', type: 'prebuilt', languageCode: 'fr-FR', providerVoiceId: 'Kore' },
-  { id: 'fr-FR-Callirrhoe', name: 'Callirrhoe (French - Female 2)', type: 'prebuilt', languageCode: 'fr-FR', providerVoiceId: 'Callirrhoe' },
-  { id: 'fr-FR-Despina', name: 'Despina (French - Male)', type: 'prebuilt', languageCode: 'fr-FR', providerVoiceId: 'Despina' },
+  { id: 'fr-FR-Kore', name: 'Kore', displayName: 'Female 1', gender: 'Female', type: 'prebuilt', languageCode: 'fr-FR', providerVoiceId: 'Kore' },
+  { id: 'fr-FR-Callirrhoe', name: 'Callirrhoe', displayName: 'Female 2', gender: 'Female', type: 'prebuilt', languageCode: 'fr-FR', providerVoiceId: 'Callirrhoe' },
+  { id: 'fr-FR-Despina', name: 'Despina', displayName: 'Male', gender: 'Male', type: 'prebuilt', languageCode: 'fr-FR', providerVoiceId: 'Despina' },
 
   // Spanish (Spain)
-  { id: 'es-ES-Fenrir', name: 'Fenrir (Spanish - Male 1)', type: 'prebuilt', languageCode: 'es-ES', providerVoiceId: 'Fenrir' },
-  { id: 'es-ES-Iapetus', name: 'Iapetus (Spanish - Male 2)', type: 'prebuilt', languageCode: 'es-ES', providerVoiceId: 'Iapetus' },
-  { id: 'es-ES-Leda', name: 'Leda (Spanish - Female)', type: 'prebuilt', languageCode: 'es-ES', providerVoiceId: 'Leda' },
+  { id: 'es-ES-Fenrir', name: 'Fenrir', displayName: 'Male 1', gender: 'Male', type: 'prebuilt', languageCode: 'es-ES', providerVoiceId: 'Fenrir' },
+  { id: 'es-ES-Iapetus', name: 'Iapetus', displayName: 'Male 2', gender: 'Male', type: 'prebuilt', languageCode: 'es-ES', providerVoiceId: 'Iapetus' },
+  { id: 'es-ES-Leda', name: 'Leda', displayName: 'Female', gender: 'Female', type: 'prebuilt', languageCode: 'es-ES', providerVoiceId: 'Leda' },
   
   // Spanish (US)
-  { id: 'es-US-Iapetus', name: 'Iapetus (US Spanish - Male)', type: 'prebuilt', languageCode: 'es-US', providerVoiceId: 'Iapetus' },
-  { id: 'es-US-Leda', name: 'Leda (US Spanish - Female)', type: 'prebuilt', languageCode: 'es-US', providerVoiceId: 'Leda' },
+  { id: 'es-US-Iapetus', name: 'Iapetus', displayName: 'Male', gender: 'Male', type: 'prebuilt', languageCode: 'es-US', providerVoiceId: 'Iapetus' },
+  { id: 'es-US-Leda', name: 'Leda', displayName: 'Female', gender: 'Female', type: 'prebuilt', languageCode: 'es-US', providerVoiceId: 'Leda' },
 
   // German
-  { id: 'de-DE-Puck', name: 'Puck (German - Male)', type: 'prebuilt', languageCode: 'de-DE', providerVoiceId: 'Puck' },
-  { id: 'de-DE-Enceladus', name: 'Enceladus (German - Female)', type: 'prebuilt', languageCode: 'de-DE', providerVoiceId: 'Enceladus' },
+  { id: 'de-DE-Puck', name: 'Puck', displayName: 'Male', gender: 'Male', type: 'prebuilt', languageCode: 'de-DE', providerVoiceId: 'Puck' },
+  { id: 'de-DE-Enceladus', name: 'Enceladus', displayName: 'Female', gender: 'Female', type: 'prebuilt', languageCode: 'de-DE', providerVoiceId: 'Enceladus' },
   
   // Japanese
-  { id: 'ja-JP-Charon', name: 'Charon (Japanese - Female)', type: 'prebuilt', languageCode: 'ja-JP', providerVoiceId: 'Charon' },
-  { id: 'ja-JP-Orus', name: 'Orus (Japanese - Male)', type: 'prebuilt', languageCode: 'ja-JP', providerVoiceId: 'Orus' },
+  { id: 'ja-JP-Charon', name: 'Charon', displayName: 'Female', gender: 'Female', type: 'prebuilt', languageCode: 'ja-JP', providerVoiceId: 'Charon' },
+  { id: 'ja-JP-Orus', name: 'Orus', displayName: 'Male', gender: 'Male', type: 'prebuilt', languageCode: 'ja-JP', providerVoiceId: 'Orus' },
 
   // Hindi
-  { id: 'hi-IN-Zephyr', name: 'Zephyr (Hindi - Female)', type: 'prebuilt', languageCode: 'hi-IN', providerVoiceId: 'Zephyr' },
-  { id: 'hi-IN-Sadachbia', name: 'Sadachbia (Hindi - Male)', type: 'prebuilt', languageCode: 'hi-IN', providerVoiceId: 'Sadachbia' },
+  { id: 'hi-IN-Zephyr', name: 'Zephyr', displayName: 'Female', gender: 'Female', type: 'prebuilt', languageCode: 'hi-IN', providerVoiceId: 'Zephyr' },
+  { id: 'hi-IN-Sadachbia', name: 'Sadachbia', displayName: 'Male', gender: 'Male', type: 'prebuilt', languageCode: 'hi-IN', providerVoiceId: 'Sadachbia' },
 
   // Korean
-  { id: 'ko-KR-Kore', name: 'Kore (Korean - Female)', type: 'prebuilt', languageCode: 'ko-KR', providerVoiceId: 'Kore' },
-  { id: 'ko-KR-Erinome', name: 'Erinome (Korean - Male)', type: 'prebuilt', languageCode: 'ko-KR', providerVoiceId: 'Erinome' },
+  { id: 'ko-KR-Kore', name: 'Kore', displayName: 'Female', gender: 'Female', type: 'prebuilt', languageCode: 'ko-KR', providerVoiceId: 'Kore' },
+  { id: 'ko-KR-Erinome', name: 'Erinome', displayName: 'Male', gender: 'Male', type: 'prebuilt', languageCode: 'ko-KR', providerVoiceId: 'Erinome' },
   
   // Italian
-  { id: 'it-IT-Achernar', name: 'Achernar (Italian - Male)', type: 'prebuilt', languageCode: 'it-IT', providerVoiceId: 'Achernar' },
-  { id: 'it-IT-Achird', name: 'Achird (Italian - Female)', type: 'prebuilt', languageCode: 'it-IT', providerVoiceId: 'Achird' },
+  { id: 'it-IT-Achernar', name: 'Achernar', displayName: 'Male', gender: 'Male', type: 'prebuilt', languageCode: 'it-IT', providerVoiceId: 'Achernar' },
+  { id: 'it-IT-Achird', name: 'Achird', displayName: 'Female', gender: 'Female', type: 'prebuilt', languageCode: 'it-IT', providerVoiceId: 'Achird' },
 
   // Portuguese (Brazil)
-  { id: 'pt-BR-Algieba', name: 'Algieba (Portuguese - Female)', type: 'prebuilt', languageCode: 'pt-BR', providerVoiceId: 'Algieba' },
-  { id: 'pt-BR-Alnilam', name: 'Alnilam (Portuguese - Male)', type: 'prebuilt', languageCode: 'pt-BR', providerVoiceId: 'Alnilam' },
-  { id: 'pt-BR-Laomedeia', name: 'Laomedeia (Portuguese - Female 2)', type: 'prebuilt', languageCode: 'pt-BR', providerVoiceId: 'Laomedeia' },
-  { id: 'pt-BR-Sadaltager', name: 'Sadaltager (Portuguese - Male 2)', type: 'prebuilt', languageCode: 'pt-BR', providerVoiceId: 'Sadaltager' },
+  { id: 'pt-BR-Algieba', name: 'Algieba', displayName: 'Female 1', gender: 'Female', type: 'prebuilt', languageCode: 'pt-BR', providerVoiceId: 'Algieba' },
+  { id: 'pt-BR-Alnilam', name: 'Alnilam', displayName: 'Male 1', gender: 'Male', type: 'prebuilt', languageCode: 'pt-BR', providerVoiceId: 'Alnilam' },
+  { id: 'pt-BR-Laomedeia', name: 'Laomedeia', displayName: 'Female 2', gender: 'Female', type: 'prebuilt', languageCode: 'pt-BR', providerVoiceId: 'Laomedeia' },
+  { id: 'pt-BR-Sadaltager', name: 'Sadaltager', displayName: 'Male 2', gender: 'Male', type: 'prebuilt', languageCode: 'pt-BR', providerVoiceId: 'Sadaltager' },
 
   // Russian
-  { id: 'ru-RU-Autonoe', name: 'Autonoe (Russian - Female)', type: 'prebuilt', languageCode: 'ru-RU', providerVoiceId: 'Autonoe' },
+  { id: 'ru-RU-Autonoe', name: 'Autonoe', displayName: 'Female', gender: 'Female', type: 'prebuilt', languageCode: 'ru-RU', providerVoiceId: 'Autonoe' },
 
   // Mandarin Chinese (China)
-  { id: 'cmn-CN-Gacrux', name: 'Gacrux (Chinese, Mandarin - Male)', type: 'prebuilt', languageCode: 'cmn-CN', providerVoiceId: 'Gacrux' },
-  { id: 'cmn-CN-Pulcherrima', name: 'Pulcherrima (Chinese, Mandarin - Female)', type: 'prebuilt', languageCode: 'cmn-CN', providerVoiceId: 'Pulcherrima' },
+  { id: 'cmn-CN-Gacrux', name: 'Gacrux', displayName: 'Male', gender: 'Male', type: 'prebuilt', languageCode: 'cmn-CN', providerVoiceId: 'Gacrux' },
+  { id: 'cmn-CN-Pulcherrima', name: 'Pulcherrima', displayName: 'Female', gender: 'Female', type: 'prebuilt', languageCode: 'cmn-CN', providerVoiceId: 'Pulcherrima' },
 
   // Mandarin Chinese (Taiwan)
-  { id: 'cmn-TW-Gacrux', name: 'Gacrux (Taiwanese Mandarin - Male)', type: 'prebuilt', languageCode: 'cmn-TW', providerVoiceId: 'Gacrux' },
-  { id: 'cmn-TW-Pulcherrima', name: 'Pulcherrima (Taiwanese Mandarin - Female)', type: 'prebuilt', languageCode: 'cmn-TW', providerVoiceId: 'Pulcherrima' },
+  { id: 'cmn-TW-Gacrux', name: 'Gacrux', displayName: 'Male', gender: 'Male', type: 'prebuilt', languageCode: 'cmn-TW', providerVoiceId: 'Gacrux' },
+  { id: 'cmn-TW-Pulcherrima', name: 'Pulcherrima', displayName: 'Female', gender: 'Female', type: 'prebuilt', languageCode: 'cmn-TW', providerVoiceId: 'Pulcherrima' },
   
   // Dutch
-  { id: 'nl-NL-Sulafat', name: 'Sulafat (Dutch - Female)', type: 'prebuilt', languageCode: 'nl-NL', providerVoiceId: 'Sulafat' },
+  { id: 'nl-NL-Sulafat', name: 'Sulafat', displayName: 'Female', gender: 'Female', type: 'prebuilt', languageCode: 'nl-NL', providerVoiceId: 'Sulafat' },
 
   // Indonesian
-  { id: 'id-ID-Laomedeia', name: 'Laomedeia (Indonesian - Female)', type: 'prebuilt', languageCode: 'id-ID', providerVoiceId: 'Laomedeia' },
+  { id: 'id-ID-Laomedeia', name: 'Laomedeia', displayName: 'Female', gender: 'Female', type: 'prebuilt', languageCode: 'id-ID', providerVoiceId: 'Laomedeia' },
 
   // Arabic
-  { id: 'ar-XA-Autonoe', name: 'Autonoe (Arabic - Female)', type: 'prebuilt', languageCode: 'ar-XA', providerVoiceId: 'Autonoe' },
+  { id: 'ar-XA-Autonoe', name: 'Autonoe', displayName: 'Female', gender: 'Female', type: 'prebuilt', languageCode: 'ar-XA', providerVoiceId: 'Autonoe' },
 
   // Filipino
-  { id: 'fil-PH-Laomedeia', name: 'Laomedeia (Filipino - Female)', type: 'prebuilt', languageCode: 'fil-PH', providerVoiceId: 'Laomedeia' },
+  { id: 'fil-PH-Laomedeia', name: 'Laomedeia', displayName: 'Female', gender: 'Female', type: 'prebuilt', languageCode: 'fil-PH', providerVoiceId: 'Laomedeia' },
 
   // Turkish
-  { id: 'tr-TR-Enceladus', name: 'Enceladus (Turkish - Female)', type: 'prebuilt', languageCode: 'tr-TR', providerVoiceId: 'Enceladus' },
+  { id: 'tr-TR-Enceladus', name: 'Enceladus', displayName: 'Female', gender: 'Female', type: 'prebuilt', languageCode: 'tr-TR', providerVoiceId: 'Enceladus' },
 
   // Thai
-  { id: 'th-TH-Orus', name: 'Orus (Thai - Male)', type: 'prebuilt', languageCode: 'th-TH', providerVoiceId: 'Orus' },
+  { id: 'th-TH-Orus', name: 'Orus', displayName: 'Male', gender: 'Male', type: 'prebuilt', languageCode: 'th-TH', providerVoiceId: 'Orus' },
 ];
+
+export const LANGUAGE_NAMES: Record<string, string> = {
+    'en-US': 'English (US)',
+    'en-GB': 'English (UK)',
+    'en-AU': 'English (Australia)',
+    'en-IN': 'English (India)',
+    'vi-VN': 'Vietnamese',
+    'fr-FR': 'French',
+    'es-ES': 'Spanish (Spain)',
+    'es-US': 'Spanish (US)',
+    'de-DE': 'German',
+    'ja-JP': 'Japanese',
+    'hi-IN': 'Hindi',
+    'ko-KR': 'Korean',
+    'it-IT': 'Italian',
+    'pt-BR': 'Portuguese (Brazil)',
+    'ru-RU': 'Russian',
+    'cmn-CN': 'Mandarin (China)',
+    'cmn-TW': 'Mandarin (Taiwan)',
+    'nl-NL': 'Dutch',
+    'id-ID': 'Indonesian',
+    'ar-XA': 'Arabic',
+    'fil-PH': 'Filipino',
+    'tr-TR': 'Turkish',
+    'th-TH': 'Thai'
+};

@@ -1,37 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import type { Voice } from '../../types';
 import { UploadIcon, FileIcon, TrashIcon, SpinnerIcon } from '../icons/Icons';
-import { PREBUILT_VOICES } from '../../constants';
+import { PREBUILT_VOICES, LANGUAGE_NAMES } from '../../constants';
 
 interface NewVoicePageProps {
   onVoiceCreated: (voice: Voice) => void;
 }
-
-const languageNames: Record<string, string> = {
-    'en-US': 'English (US)',
-    'en-GB': 'English (UK)',
-    'en-AU': 'English (Australia)',
-    'en-IN': 'English (India)',
-    'vi-VN': 'Vietnamese',
-    'fr-FR': 'French',
-    'es-ES': 'Spanish (Spain)',
-    'es-US': 'Spanish (US)',
-    'de-DE': 'German',
-    'ja-JP': 'Japanese',
-    'hi-IN': 'Hindi',
-    'ko-KR': 'Korean',
-    'it-IT': 'Italian',
-    'pt-BR': 'Portuguese (Brazil)',
-    'ru-RU': 'Russian',
-    'cmn-CN': 'Mandarin (China)',
-    'cmn-TW': 'Mandarin (Taiwan)',
-    'nl-NL': 'Dutch',
-    'id-ID': 'Indonesian',
-    'ar-XA': 'Arabic',
-    'fil-PH': 'Filipino',
-    'tr-TR': 'Turkish',
-    'th-TH': 'Thai'
-};
 
 export const NewVoicePage: React.FC<NewVoicePageProps> = ({ onVoiceCreated }) => {
   const [displayName, setDisplayName] = useState('');
@@ -41,12 +15,9 @@ export const NewVoicePage: React.FC<NewVoicePageProps> = ({ onVoiceCreated }) =>
   const [error, setError] = useState<string | null>(null);
 
   const availableLanguages = useMemo(() => {
-    return Array.from(
-        new Set(PREBUILT_VOICES.map(v => v.languageCode))
-    ).map(code => ({
-        code,
-        name: languageNames[code] || code
-    })).sort((a, b) => a.name.localeCompare(b.name));
+    return Object.entries(LANGUAGE_NAMES)
+      .map(([code, name]) => ({ code, name }))
+      .sort((a, b) => a.name.localeCompare(b.name));
   }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,7 +53,9 @@ export const NewVoicePage: React.FC<NewVoicePageProps> = ({ onVoiceCreated }) =>
 
       const newVoice: Voice = {
         id: `custom-${Date.now()}`,
-        name: `${displayName} (Custom)`,
+        name: `${displayName}`,
+        displayName: 'Custom',
+        gender: 'Female', // Defaulting to female for demo
         type: 'custom',
         languageCode: language,
         providerVoiceId: baseVoice.providerVoiceId,

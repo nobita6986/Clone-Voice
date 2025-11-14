@@ -1,7 +1,7 @@
-
 import React, { useState } from 'react';
 import type { HistoryItem, Voice } from '../../types';
 import AudioPlayer from '../AudioPlayer';
+import { LANGUAGE_NAMES } from '../../constants';
 
 interface HistoryPageProps {
   history: HistoryItem[];
@@ -12,7 +12,12 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ history, voices }) => 
   const [expandedRowId, setExpandedRowId] = useState<string | null>(null);
   
   const getVoiceName = (voiceId: string) => {
-    return voices.find(v => v.id === voiceId)?.name || 'Unknown Voice';
+    const voice = voices.find(v => v.id === voiceId);
+    if (!voice) return 'Unknown Voice';
+    if (voice.type === 'custom') {
+      return `${voice.name} (Custom - ${LANGUAGE_NAMES[voice.languageCode]})`;
+    }
+    return `${voice.name} (${LANGUAGE_NAMES[voice.languageCode]} - ${voice.displayName})`;
   };
   
   const toggleRow = (id: string) => {
