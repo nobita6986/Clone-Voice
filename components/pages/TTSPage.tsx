@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import type { Voice, HistoryItem } from '../../types';
 import { generateSpeech } from '../../services/geminiService';
@@ -7,6 +8,9 @@ import { SpinnerIcon } from '../icons/Icons';
 interface TTSPageProps {
   voices: Voice[];
   onGenerationComplete: (item: Omit<HistoryItem, 'id' | 'createdAt'>) => void;
+  activeApiKey: string | null;
+  selectedModel: string;
+  openApiKeyManager: () => void;
 }
 
 const placeholderTexts: Record<string, string> = {
@@ -22,7 +26,7 @@ const placeholderTexts: Record<string, string> = {
 };
 
 
-export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete }) => {
+export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete, activeApiKey, selectedModel, openApiKeyManager }) => {
   const [text, setText] = useState('Hello! Welcome to VoiceClone Studio, powered by Gemini.');
   const [selectedVoiceId, setSelectedVoiceId] = useState<string>(voices[0]?.id || '');
   const [isLoading, setIsLoading] = useState(false);
@@ -44,14 +48,14 @@ export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete }
   }, [selectedVoice]);
 
   const handleGenerate = useCallback(async () => {
-    if (!text || !selectedVoice) return;
+    if (!text || !selectedVoice || !activeApiKey) return;
 
     setIsLoading(true);
     setError(null);
     setGeneratedAudio('');
 
     try {
-      const audioData = await generateSpeech(text, selectedVoice.providerVoiceId);
+      const audioData = await generateSpeech(text, selectedVoice.providerVoiceId, activeApiKey, selectedModel);
       setGeneratedAudio(audioData);
       onGenerationComplete({
         text,
@@ -63,7 +67,7 @@ export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete }
     } finally {
       setIsLoading(false);
     }
-  }, [text, selectedVoice, onGenerationComplete]);
+  }, [text, selectedVoice, onGenerationComplete, activeApiKey, selectedModel]);
   
   return (
     <div className="max-w-3xl mx-auto">
@@ -71,6 +75,19 @@ export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete }
         <h1 className="text-3xl font-bold text-white">Generate Speech</h1>
         <p className="text-gray-400 mt-1">Transform your text into lifelike speech with a single click.</p>
       </header>
+
+      {!activeApiKey && (
+        <div className="mb-6 p-4 bg-yellow-900/50 border border-yellow-500 text-yellow-300 rounded-lg">
+          <p className="font-bold">API Key Required</p>
+          <p>
+            Please {' '}
+            <button onClick={openApiKeyManager} className="underline hover:text-yellow-200">
+              add and activate an API key
+            </button>
+            {' '} to generate audio.
+          </p>
+        </div>
+      )}
 
       <div className="space-y-6 bg-gray-800 p-6 rounded-xl shadow-lg">
         <div>
@@ -113,7 +130,7 @@ export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete }
 
         <button
           onClick={handleGenerate}
-          disabled={isLoading || !text}
+          disabled={isLoading || !text || !activeApiKey}
           className="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-brand-blue to-brand-teal text-white font-bold py-3 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
         >
           {isLoading ? (

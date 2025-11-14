@@ -16,3 +16,8 @@ export interface HistoryItem {
   audioData: string; // base64 encoded string
   createdAt: Date;
 }
+
+export interface ApiKey {
+  id: string;
+  key: string;
+}
