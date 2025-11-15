@@ -7,9 +7,10 @@ import { SpinnerIcon } from '../icons/Icons';
 interface TTSPageProps {
   voices: Voice[];
   onGenerationComplete: (item: Omit<HistoryItem, 'id' | 'createdAt'>) => void;
+  apiKey: string | null;
 }
 
-export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete }) => {
+export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete, apiKey }) => {
   const [text, setText] = useState('Xin chào! Chào mừng đến với VoiceClone Studio, được cung cấp bởi Gemini.');
   const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>('');
   const [selectedVoiceId, setSelectedVoiceId] = useState<string>('');
@@ -64,14 +65,14 @@ export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete }
 
   const handleGenerate = useCallback(async () => {
     const selectedVoice = voices.find(v => v.id === selectedVoiceId);
-    if (!text || !selectedVoice) return;
+    if (!text || !selectedVoice || !apiKey) return;
 
     setIsLoading(true);
     setError(null);
     setGeneratedAudio('');
 
     try {
-      const audioData = await generateSpeech(text, selectedVoice.providerVoiceId);
+      const audioData = await generateSpeech(text, selectedVoice.providerVoiceId, apiKey);
       setGeneratedAudio(audioData);
       onGenerationComplete({
         text,
@@ -83,7 +84,7 @@ export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete }
     } finally {
       setIsLoading(false);
     }
-  }, [text, selectedVoiceId, voices, onGenerationComplete]);
+  }, [text, selectedVoiceId, voices, onGenerationComplete, apiKey]);
   
   return (
     <div className="max-w-3xl mx-auto">
@@ -151,7 +152,7 @@ export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete }
 
         <button
           onClick={handleGenerate}
-          disabled={isLoading || !text || !selectedVoiceId}
+          disabled={isLoading || !text || !selectedVoiceId || !apiKey}
           className="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-brand-blue to-brand-teal text-white font-bold py-3 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
         >
           {isLoading ? (
@@ -159,7 +160,7 @@ export const TTSPage: React.FC<TTSPageProps> = ({ voices, onGenerationComplete }
               <SpinnerIcon />
               Đang tạo...
             </>
-          ) : 'Tạo âm thanh'}
+          ) : !apiKey ? 'Vui lòng đặt API Key trong Cài đặt' : 'Tạo âm thanh'}
         </button>
       </div>
 

@@ -1,13 +1,13 @@
 
 import { GoogleGenAI, Modality } from "@google/genai";
 
-if (!process.env.API_KEY) {
-  throw new Error("API_KEY environment variable not set");
-}
+export const generateSpeech = async (text: string, voiceName: string, apiKey: string): Promise<string> => {
+  if (!apiKey) {
+    throw new Error("Khóa API Gemini chưa được định cấu hình.");
+  }
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = new GoogleGenAI({ apiKey });
 
-export const generateSpeech = async (text: string, voiceName: string): Promise<string> => {
   try {
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash-preview-tts",
@@ -26,10 +26,14 @@ export const generateSpeech = async (text: string, voiceName: string): Promise<s
     if (base64Audio) {
       return base64Audio;
     } else {
-      throw new Error("Không nhận được dữ liệu âm thanh từ API.");
+      throw new Error("Không nhận được dữ liệu âm thanh từ API. Điều này có thể do một khóa API không hợp lệ.");
     }
   } catch (error) {
     console.error("Error generating speech:", error);
+    // Provide a more specific error message if possible
+    if (error instanceof Error && error.message.includes('API key not valid')) {
+       throw new Error("Khóa API Gemini không hợp lệ. Vui lòng kiểm tra lại trong phần Cài đặt.");
+    }
     throw new Error("Không thể tạo giọng nói. Vui lòng kiểm tra khóa API và đầu vào của bạn.");
   }
 };

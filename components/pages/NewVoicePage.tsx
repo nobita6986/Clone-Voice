@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import type { Voice } from '../../types';
 import { UploadIcon, FileIcon, TrashIcon, SpinnerIcon } from '../icons/Icons';
+import { PREBUILT_VOICES } from '../../constants';
 
 interface NewVoicePageProps {
   onVoiceCreated: (voice: Omit<Voice, 'id' | 'type'>) => void;
@@ -18,19 +19,8 @@ const languageOptions: Record<string, string> = {
   'ko-KR': 'Tiếng Hàn',
 };
 
-// Maps a language code to a functional, pre-built Gemini voice provider ID.
-// This makes the "cloned" voice actually work for generation in this demo.
-const providerVoiceMapping: Record<string, string> = {
-  'en-US': 'Zephyr',
-  'en-GB': 'Charon',
-  'fr-FR': 'Kore',
-  'es-ES': 'Fenrir',
-  // Fallback to Zephyr for languages without a dedicated Gemini voice
-  'vi-VN': 'Zephyr',
-  'de-DE': 'Zephyr',
-  'ja-JP': 'Zephyr',
-  'ko-KR': 'Zephyr',
-};
+// These are the "native" Gemini voices that are most likely to work.
+const GEMINI_NATIVE_VOICES = ['Zephyr', 'Puck', 'Kore', 'Charon', 'Fenrir'];
 
 export const NewVoicePage: React.FC<NewVoicePageProps> = ({ onVoiceCreated }) => {
   const [displayName, setDisplayName] = useState('');
@@ -58,17 +48,36 @@ export const NewVoicePage: React.FC<NewVoicePageProps> = ({ onVoiceCreated }) =>
     setError(null);
     setIsProcessing(true);
     
-    // This is a mock of the voice cloning process. For this demo, we will
-    // create a custom voice profile that maps to a pre-built Gemini voice
-    // based on the selected language, making it functional in the app.
-    // The result will be persisted to Supabase.
+    // This is a mock of the voice cloning process.
+    // To make the cloned voice functional, we map it to a suitable pre-built voice.
     setTimeout(() => {
+      // 1. Get all prebuilt voices for the selected language.
+      const voicesForLanguage = PREBUILT_VOICES.filter(
+        voice => voice.languageCode === language
+      );
+
+      // 2. Try to find a "native" Gemini voice among them first.
+      let suitablePrebuiltVoice = voicesForLanguage.find(voice =>
+        GEMINI_NATIVE_VOICES.includes(voice.providerVoiceId)
+      );
+
+      // 3. If no native voice is found, use the first available voice for that language.
+      if (!suitablePrebuiltVoice && voicesForLanguage.length > 0) {
+        suitablePrebuiltVoice = voicesForLanguage[0];
+      }
+      
+      // 4. As a final fallback, default to Zephyr.
+      const providerVoiceId = suitablePrebuiltVoice
+        ? suitablePrebuiltVoice.providerVoiceId
+        : 'Zephyr';
+
       const newVoiceData = {
         name: `${displayName} (Tùy chỉnh)`,
         languageCode: language,
         languageName: languageOptions[language],
-        providerVoiceId: providerVoiceMapping[language] || 'Zephyr',
+        providerVoiceId: providerVoiceId,
       };
+
       onVoiceCreated(newVoiceData);
       setDisplayName('');
       setFiles([]);
