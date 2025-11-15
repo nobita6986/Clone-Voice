@@ -25,9 +25,9 @@ const App: React.FC = () => {
     const storedApiKey = localStorage.getItem('gemini_api_key');
     if (storedApiKey) {
       setApiKey(storedApiKey);
-    } else {
-      setTimeout(() => setIsApiKeyModalOpen(true), 500);
     }
+    // Hộp thoại không còn được mở tự động khi khởi động.
+    // Nó bây giờ chỉ được mở bởi người dùng nhấp vào nút cài đặt.
     
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);

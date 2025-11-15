@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 
 interface ApiKeyModalProps {
@@ -20,11 +21,10 @@ const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose, onSave, curr
     onSave(apiKeyInput.trim());
   };
   
-  // Prevent closing modal if no key is set yet
+  // Trình xử lý đóng bây giờ luôn gọi onClose, cho phép người dùng
+  // đóng hộp thoại ngay cả khi chưa có khóa nào được đặt.
   const handleClose = () => {
-    if (currentApiKey) {
-        onClose();
-    }
+    onClose();
   };
 
   return (
@@ -58,14 +58,13 @@ const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose, onSave, curr
         </div>
         
         <div className="mt-8 flex justify-end gap-4">
-          {currentApiKey && (
-             <button
-                onClick={handleClose}
-                className="px-6 py-2 rounded-lg bg-gray-600 text-white hover:bg-gray-500 transition-colors"
-            >
-                Hủy
-            </button>
-          )}
+          {/* Nút Hủy bây giờ luôn hiển thị */}
+          <button
+            onClick={handleClose}
+            className="px-6 py-2 rounded-lg bg-gray-600 text-white hover:bg-gray-500 transition-colors"
+          >
+            Hủy
+          </button>
           <button
             onClick={handleSave}
             disabled={!apiKeyInput.trim()}
