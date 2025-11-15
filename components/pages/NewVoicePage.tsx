@@ -3,9 +3,11 @@ import React, { useState } from 'react';
 import type { Voice } from '../../types';
 import { UploadIcon, FileIcon, TrashIcon, SpinnerIcon } from '../icons/Icons';
 import { PREBUILT_VOICES } from '../../constants';
+import type { Session } from '@supabase/supabase-js';
 
 interface NewVoicePageProps {
   onVoiceCreated: (voice: Omit<Voice, 'id' | 'type'>) => void;
+  session: Session | null;
 }
 
 const languageOptions: Record<string, string> = {
@@ -22,7 +24,7 @@ const languageOptions: Record<string, string> = {
 // These are the "native" Gemini voices that are most likely to work.
 const GEMINI_NATIVE_VOICES = ['Zephyr', 'Puck', 'Kore', 'Charon', 'Fenrir'];
 
-export const NewVoicePage: React.FC<NewVoicePageProps> = ({ onVoiceCreated }) => {
+export const NewVoicePage: React.FC<NewVoicePageProps> = ({ onVoiceCreated, session }) => {
   const [displayName, setDisplayName] = useState('');
   const [language, setLanguage] = useState('en-US');
   const [files, setFiles] = useState<File[]>([]);
@@ -82,7 +84,7 @@ export const NewVoicePage: React.FC<NewVoicePageProps> = ({ onVoiceCreated }) =>
       setDisplayName('');
       setFiles([]);
       setIsProcessing(false);
-    }, 2500);
+    }, 1500);
   };
   
   return (
@@ -91,6 +93,12 @@ export const NewVoicePage: React.FC<NewVoicePageProps> = ({ onVoiceCreated }) =>
         <h1 className="text-3xl font-bold text-white">Tạo hồ sơ giọng nói mới</h1>
         <p className="text-gray-400 mt-1">Tải lên các mẫu âm thanh để nhân bản giọng nói. <strong className="text-yellow-400/90">Tính năng này là một bản trình diễn.</strong> Giọng nói tùy chỉnh được tạo sẽ sử dụng một giọng nói có sẵn tiêu chuẩn cho ngôn ngữ đã chọn để tạo âm thanh.</p>
       </header>
+
+      {!session && (
+        <div className="mb-6 p-4 bg-yellow-900/50 border border-yellow-500 text-yellow-300 rounded-lg">
+            <p><strong className="font-bold">Đăng nhập để Lưu Giọng nói!</strong> Vui lòng đăng nhập để lưu và sử dụng các hồ sơ giọng nói tùy chỉnh của bạn.</p>
+        </div>
+      )}
       
       <form onSubmit={handleSubmit} className="space-y-6 bg-gray-800 p-6 rounded-xl shadow-lg">
         <div>

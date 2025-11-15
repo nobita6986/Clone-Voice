@@ -2,13 +2,15 @@
 import React, { useState } from 'react';
 import type { HistoryItem, Voice } from '../../types';
 import AudioPlayer from '../AudioPlayer';
+import type { Session } from '@supabase/supabase-js';
 
 interface HistoryPageProps {
   history: HistoryItem[];
   voices: Voice[];
+  session: Session | null;
 }
 
-export const HistoryPage: React.FC<HistoryPageProps> = ({ history, voices }) => {
+export const HistoryPage: React.FC<HistoryPageProps> = ({ history, voices, session }) => {
   const [expandedRowId, setExpandedRowId] = useState<string | null>(null);
   
   const getVoiceName = (voiceId: string) => {
@@ -18,6 +20,16 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ history, voices }) => 
   const toggleRow = (id: string) => {
     setExpandedRowId(prevId => (prevId === id ? null : id));
   };
+
+  if (!session) {
+    return (
+        <div className="text-center py-20">
+            <h1 className="text-3xl font-bold text-white mb-2">Xem Lịch sử của bạn</h1>
+            <p className="text-gray-400">Đăng nhập để xem các clip âm thanh đã tạo trước đây của bạn.</p>
+            <p className="text-gray-500 text-sm mt-4">(Sử dụng nút Đăng nhập ở thanh bên)</p>
+        </div>
+    );
+  }
   
   if (history.length === 0) {
     return (

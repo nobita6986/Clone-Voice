@@ -8,33 +8,29 @@ import { HistoryPage } from './components/pages/HistoryPage';
 import type { Page, Voice, HistoryItem } from './types';
 import { PREBUILT_VOICES } from './constants';
 import { supabase } from './supabaseClient';
-import { Auth } from '@supabase/auth-ui-react';
-import { ThemeSupa } from '@supabase/auth-ui-shared';
 import type { Session } from '@supabase/supabase-js';
 import ApiKeyModal from './components/ApiKeyModal';
+import LoginModal from './components/LoginModal';
 
 const App: React.FC = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [currentPage, setCurrentPage] = useState<Page>('tts');
   const [customVoices, setCustomVoices] = useState<Voice[]>([]);
   const [history, setHistory] = useState<HistoryItem[]>([]);
-  const [loading, setLoading] = useState(true);
   const [apiKey, setApiKey] = useState<string | null>(null);
   const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   useEffect(() => {
-    // Load API key from local storage on initial load
     const storedApiKey = localStorage.getItem('gemini_api_key');
     if (storedApiKey) {
       setApiKey(storedApiKey);
     } else {
-      // If no key, prompt the user after a short delay to allow the app to render
       setTimeout(() => setIsApiKeyModalOpen(true), 500);
     }
     
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      // We set loading to false here, but the main content will wait for the key.
     });
 
     const {
@@ -45,6 +41,10 @@ const App: React.FC = () => {
         setCustomVoices([]);
         setHistory([]);
       }
+      // Close login modal on successful login
+      if (_event === 'SIGNED_IN') {
+        setIsLoginModalOpen(false);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -53,7 +53,6 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (session) {
-        setLoading(true);
         const { data: voicesData, error: voicesError } = await supabase
           .from('voices')
           .select('*')
@@ -90,9 +89,6 @@ const App: React.FC = () => {
            })) as HistoryItem[];
            setHistory(formattedHistory);
         }
-        setLoading(false);
-      } else {
-        setLoading(false);
       }
     };
     fetchData();
@@ -101,6 +97,10 @@ const App: React.FC = () => {
   const allVoices = [...PREBUILT_VOICES, ...customVoices];
 
   const addHistoryItem = async (item: Omit<HistoryItem, 'id' | 'createdAt'>) => {
+      if (!session) {
+        setIsLoginModalOpen(true);
+        return;
+      }
       const { data, error } = await supabase
         .from('history')
         .insert([{ 
@@ -126,6 +126,10 @@ const App: React.FC = () => {
   };
   
   const addCustomVoice = async (voice: Omit<Voice, 'id' | 'type'>) => {
+    if (!session) {
+      setIsLoginModalOpen(true);
+      return;
+    }
     const { data, error } = await supabase
       .from('voices')
       .insert([{
@@ -167,34 +171,13 @@ const App: React.FC = () => {
       case 'tts':
         return <TTSPage voices={allVoices} onGenerationComplete={addHistoryItem} apiKey={apiKey} />;
       case 'new-voice':
-        return <NewVoicePage onVoiceCreated={addCustomVoice} />;
+        return <NewVoicePage onVoiceCreated={addCustomVoice} session={session} />;
       case 'history':
-        return <HistoryPage history={history} voices={allVoices} />;
+        return <HistoryPage history={history} voices={allVoices} session={session} />;
       default:
         return <TTSPage voices={allVoices} onGenerationComplete={addHistoryItem} apiKey={apiKey} />;
     }
   };
-
-  if (!session) {
-    return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-900">
-            <div className="w-full max-w-md p-8 bg-gray-800 rounded-xl shadow-lg">
-                <h1 className="text-2xl font-bold text-center mb-6 text-white">Chào mừng đến với VoiceClone Studio</h1>
-                <Auth
-                    supabaseClient={supabase}
-                    appearance={{ theme: ThemeSupa }}
-                    providers={['google']}
-                    onlyThirdPartyProviders={true}
-                    theme="dark"
-                />
-            </div>
-        </div>
-    );
-  }
-  
-  if (loading) {
-    return null; // Or a loading spinner
-  }
 
   return (
     <div className="flex h-screen bg-gray-900 text-gray-200 font-sans">
@@ -204,10 +187,16 @@ const App: React.FC = () => {
         onSave={handleApiKeySave}
         currentApiKey={apiKey}
       />
+      <LoginModal 
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+      />
       <Sidebar 
         currentPage={currentPage} 
         setCurrentPage={setCurrentPage}
         onSettingsClick={() => setIsApiKeyModalOpen(true)}
+        session={session}
+        onLoginClick={() => setIsLoginModalOpen(true)}
       />
       <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
         {renderPage()}

@@ -1,17 +1,20 @@
 
 import React from 'react';
 import type { Page } from '../types';
-import { DashboardIcon, TTSIcon, NewVoiceIcon, HistoryIcon, LogoIcon, LogoutIcon, SettingsIcon } from './icons/Icons';
+import { DashboardIcon, TTSIcon, NewVoiceIcon, HistoryIcon, LogoIcon, LogoutIcon, SettingsIcon, LoginIcon } from './icons/Icons';
 import { supabase } from '../../supabaseClient';
+import type { Session } from '@supabase/supabase-js';
 
 
 interface SidebarProps {
   currentPage: Page;
   setCurrentPage: (page: Page) => void;
   onSettingsClick: () => void;
+  session: Session | null;
+  onLoginClick: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ currentPage, setCurrentPage, onSettingsClick }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ currentPage, setCurrentPage, onSettingsClick, session, onLoginClick }) => {
   const navItems: { id: Page; name: string; icon: React.ReactNode }[] = [
     { id: 'dashboard', name: 'Bảng điều khiển', icon: <DashboardIcon /> },
     { id: 'tts', name: 'Tạo giọng nói', icon: <TTSIcon /> },
@@ -58,13 +61,23 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, setCurrentPage, o
           <SettingsIcon />
           <span className="hidden md:block ml-4">Cài đặt</span>
         </button>
-        <button
-          onClick={handleLogout}
-          className="w-full flex items-center p-3 my-2 rounded-lg transition-colors duration-200 text-gray-300 hover:bg-gray-700 hover:text-white"
-        >
-          <LogoutIcon />
-          <span className="hidden md:block ml-4">Đăng xuất</span>
-        </button>
+        {session ? (
+            <button
+            onClick={handleLogout}
+            className="w-full flex items-center p-3 my-2 rounded-lg transition-colors duration-200 text-gray-300 hover:bg-gray-700 hover:text-white"
+            >
+                <LogoutIcon />
+                <span className="hidden md:block ml-4">Đăng xuất</span>
+            </button>
+        ) : (
+            <button
+            onClick={onLoginClick}
+            className="w-full flex items-center p-3 my-2 rounded-lg transition-colors duration-200 text-gray-300 hover:bg-gray-700 hover:text-white"
+            >
+                <LoginIcon />
+                <span className="hidden md:block ml-4">Đăng nhập</span>
+            </button>
+        )}
         <div className="hidden md:block text-center text-xs text-gray-400 mt-2">
           <p>Cung cấp bởi Gemini</p>
         </div>
