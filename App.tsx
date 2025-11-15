@@ -41,27 +41,44 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (session) {
+        setLoading(true);
         const { data: voicesData, error: voicesError } = await supabase
           .from('voices')
           .select('*')
           .order('created_at', { ascending: false });
 
-        if (voicesError) console.error('Error fetching voices:', voicesError);
-        else setCustomVoices(voicesData as Voice[]);
+        if (voicesError) {
+          console.error('Error fetching voices:', voicesError);
+        } else if (voicesData) {
+          const formattedVoices = voicesData.map(v => ({
+            id: v.id,
+            name: v.name,
+            type: 'custom',
+            languageCode: v.language_code,
+            languageName: v.language_name,
+            providerVoiceId: v.provider_voice_id,
+          })) as Voice[];
+          setCustomVoices(formattedVoices);
+        }
         
         const { data: historyData, error: historyError } = await supabase
           .from('history')
           .select('*')
           .order('created_at', { ascending: false });
         
-        if (historyError) console.error('Error fetching history:', historyError);
-        else {
+        if (historyError) {
+          console.error('Error fetching history:', historyError);
+        } else if (historyData) {
            const formattedHistory = historyData.map(item => ({
-             ...item,
+             id: item.id,
+             text: item.text,
+             voiceId: item.voice_id,
+             audioData: item.audio_data,
              createdAt: new Date(item.created_at),
            })) as HistoryItem[];
            setHistory(formattedHistory);
         }
+        setLoading(false);
       }
     };
     fetchData();
@@ -77,15 +94,19 @@ const App: React.FC = () => {
             voice_id: item.voiceId,
             audio_data: item.audioData
         }])
-        .select();
+        .select()
+        .single();
 
       if (error) {
           console.error("Error saving history:", error);
       } else if (data) {
-          const newItem = {
-              ...data[0],
-              createdAt: new Date(data[0].created_at)
-          } as HistoryItem;
+          const newItem: HistoryItem = {
+            id: data.id,
+            text: data.text,
+            voiceId: data.voice_id,
+            audioData: data.audio_data,
+            createdAt: new Date(data.created_at)
+          };
           setHistory(prev => [newItem, ...prev]);
       }
   };
@@ -99,12 +120,20 @@ const App: React.FC = () => {
           language_name: voice.languageName,
           provider_voice_id: voice.providerVoiceId,
       }])
-      .select();
+      .select()
+      .single();
       
     if (error) {
       console.error("Error creating voice:", error);
     } else if (data) {
-      const newVoice = { ...data[0], type: 'custom' } as Voice;
+      const newVoice: Voice = { 
+        id: data.id,
+        name: data.name,
+        type: 'custom',
+        languageCode: data.language_code,
+        languageName: data.language_name,
+        providerVoiceId: data.provider_voice_id,
+      };
       setCustomVoices(prev => [newVoice, ...prev]);
     }
   }
