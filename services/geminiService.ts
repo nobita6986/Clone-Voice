@@ -26,10 +26,10 @@ export const generateSpeech = async (text: string, voiceName: string): Promise<s
     if (base64Audio) {
       return base64Audio;
     } else {
-      throw new Error("No audio data received from API.");
+      throw new Error("Không nhận được dữ liệu âm thanh từ API.");
     }
   } catch (error) {
     console.error("Error generating speech:", error);
-    throw new Error("Failed to generate speech. Please check your API key and input.");
+    throw new Error("Không thể tạo giọng nói. Vui lòng kiểm tra khóa API và đầu vào của bạn.");
   }
 };

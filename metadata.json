@@ -1,6 +1,6 @@
 {
   "name": "VoiceClone Studio",
-  "description": "An application to generate speech from text using pre-built and custom-cloned voices via the Gemini API. Users can input text, select a voice, and generate, play, and download the resulting audio.",
+  "description": "Một ứng dụng tạo giọng nói từ văn bản bằng cách sử dụng các giọng nói có sẵn và giọng nói nhân bản tùy chỉnh thông qua Gemini API. Người dùng có thể nhập văn bản, chọn giọng nói, và tạo, phát và tải xuống âm thanh kết quả.",
   "requestFramePermissions": [
     "microphone"
   ]

@@ -12,7 +12,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ history, voices }) => 
   const [expandedRowId, setExpandedRowId] = useState<string | null>(null);
   
   const getVoiceName = (voiceId: string) => {
-    return voices.find(v => v.id === voiceId)?.name || 'Unknown Voice';
+    return voices.find(v => v.id === voiceId)?.name || 'Giọng nói không xác định';
   };
   
   const toggleRow = (id: string) => {
@@ -22,8 +22,8 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ history, voices }) => 
   if (history.length === 0) {
     return (
         <div className="text-center py-20">
-            <h1 className="text-3xl font-bold text-white mb-2">No History Yet</h1>
-            <p className="text-gray-400">Your generated audio clips will appear here.</p>
+            <h1 className="text-3xl font-bold text-white mb-2">Chưa có lịch sử</h1>
+            <p className="text-gray-400">Các clip âm thanh đã tạo của bạn sẽ xuất hiện ở đây.</p>
         </div>
     );
   }
@@ -31,8 +31,8 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ history, voices }) => 
   return (
     <div>
       <header className="mb-8">
-        <h1 className="text-3xl font-bold text-white">Generation History</h1>
-        <p className="text-gray-400 mt-1">Review, play, and download your past audio generations.</p>
+        <h1 className="text-3xl font-bold text-white">Lịch sử tạo</h1>
+        <p className="text-gray-400 mt-1">Xem lại, phát và tải xuống các bản âm thanh đã tạo trước đây của bạn.</p>
       </header>
       
       <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
@@ -40,11 +40,11 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ history, voices }) => 
           <table className="min-w-full divide-y divide-gray-700">
             <thead className="bg-gray-700/50">
               <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Text Preview</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Voice Used</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Date</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Xem trước văn bản</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Giọng nói đã sử dụng</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Ngày</th>
                 <th scope="col" className="relative px-6 py-3">
-                  <span className="sr-only">Play</span>
+                  <span className="sr-only">Phát</span>
                 </th>
               </tr>
             </thead>
@@ -65,7 +65,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ history, voices }) => 
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                        <button className="text-brand-blue hover:text-brand-teal">
-                          {expandedRowId === item.id ? 'Collapse' : 'Play Audio'}
+                          {expandedRowId === item.id ? 'Thu gọn' : 'Phát âm thanh'}
                        </button>
                     </td>
                   </tr>

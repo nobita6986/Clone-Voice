@@ -1,7 +1,9 @@
 
 import React from 'react';
 import type { Page } from '../types';
-import { DashboardIcon, TTSIcon, NewVoiceIcon, HistoryIcon, LogoIcon } from './icons/Icons';
+import { DashboardIcon, TTSIcon, NewVoiceIcon, HistoryIcon, LogoIcon, LogoutIcon } from './icons/Icons';
+import { supabase } from '../../supabaseClient';
+
 
 interface SidebarProps {
   currentPage: Page;
@@ -10,11 +12,15 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ currentPage, setCurrentPage }) => {
   const navItems: { id: Page; name: string; icon: React.ReactNode }[] = [
-    { id: 'dashboard', name: 'Dashboard', icon: <DashboardIcon /> },
-    { id: 'tts', name: 'Generate Speech', icon: <TTSIcon /> },
-    { id: 'new-voice', name: 'New Voice Profile', icon: <NewVoiceIcon /> },
-    { id: 'history', name: 'History', icon: <HistoryIcon /> },
+    { id: 'dashboard', name: 'Bảng điều khiển', icon: <DashboardIcon /> },
+    { id: 'tts', name: 'Tạo giọng nói', icon: <TTSIcon /> },
+    { id: 'new-voice', name: 'Hồ sơ giọng nói mới', icon: <NewVoiceIcon /> },
+    { id: 'history', name: 'Lịch sử', icon: <HistoryIcon /> },
   ];
+  
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  }
 
   return (
     <nav className="w-16 md:w-64 bg-gray-800 p-2 md:p-4 flex flex-col justify-between border-r border-gray-700">
@@ -43,8 +49,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, setCurrentPage })
           ))}
         </ul>
       </div>
-       <div className="hidden md:block p-4 border-t border-gray-700 text-center text-xs text-gray-400">
-        <p>Powered by Gemini</p>
+       <div className="p-2 md:p-4 border-t border-gray-700">
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center p-3 my-2 rounded-lg transition-colors duration-200 text-gray-300 hover:bg-gray-700 hover:text-white"
+        >
+          <LogoutIcon />
+          <span className="hidden md:block ml-4">Đăng xuất</span>
+        </button>
+        <div className="hidden md:block text-center text-xs text-gray-400 mt-2">
+          <p>Cung cấp bởi Gemini</p>
+        </div>
       </div>
     </nav>
   );

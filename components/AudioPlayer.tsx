@@ -88,8 +88,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ base64Audio }) => {
           {!isReady ? <SpinnerIcon /> : isPlaying ? <PauseIcon /> : <PlayIcon />}
         </button>
         <div>
-          <p className="font-semibold">Generated Audio</p>
-          <p className="text-sm text-gray-400">{isReady ? 'Ready to play' : 'Processing audio...'}</p>
+          <p className="font-semibold">Âm thanh đã tạo</p>
+          <p className="text-sm text-gray-400">{isReady ? 'Sẵn sàng để phát' : 'Đang xử lý âm thanh...'}</p>
         </div>
       </div>
       <a
@@ -98,7 +98,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ base64Audio }) => {
         className={`flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors ${!isReady ? 'pointer-events-none opacity-50' : ''}`}
       >
         <DownloadIcon />
-        Download
+        Tải xuống
       </a>
     </div>
   );
